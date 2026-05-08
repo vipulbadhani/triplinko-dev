@@ -628,6 +628,8 @@
   </style>
 </head>
 <body>
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#f59e0b;color:#1a1a1a;text-align:center;padding:6px;font-size:13px;font-weight:700;font-family:sans-serif;">🧪 DEVELOPMENT MODE — Live data nahi hai</div>
+<div style="height:32px"></div>
 
 
 <!-- TOAST -->
@@ -716,6 +718,7 @@
   <div class="section-tabs">
     <button class="section-tab active" id="tabRides" onclick="switchSection('rides')">🚗 Available Rides</button>
     <button class="section-tab" id="tabRequests" onclick="switchSection('requests')">🙋 Ride Chahiye</button>
+    <button class="section-tab" id="tabServices" onclick="switchSection('services')">🛠️ Services</button>
   </div>
 
   <!-- RIDES PANEL -->
@@ -761,6 +764,45 @@
       <button class="post-btn" onclick="openRequestModal()" id="reqCtaBtn">Request Post Karo — Free</button>
     </div>
   </div>
+
+  <!-- SERVICES PANEL -->
+  <div id="servicesPanel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div class="section-title">🛠️ Services</div>
+      <button class="filter-btn" onclick="loadServices()">🔄 Refresh</button>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <select id="svcLocationFilter" onchange="filterServices()" class="form-select" style="flex:1;padding:8px 12px;font-size:13px;">
+        <option value="">📍 Sab Locations</option>
+      </select>
+      <select id="svcTypeFilter" onchange="filterServices()" class="form-select" style="flex:1;padding:8px 12px;font-size:13px;">
+        <option value="">🔧 Sab Types</option>
+        <option value="driver">🚗 Driver</option>
+        <option value="photographer">📸 Photographer</option>
+        <option value="plumber">🔧 Plumber</option>
+        <option value="electrician">⚡ Electrician</option>
+        <option value="mason">🏗️ Raj Mistri</option>
+        <option value="cook">🍳 Cook</option>
+        <option value="cleaner">🧹 Cleaner</option>
+        <option value="tech_repair">💻 Tech Repair</option>
+        <option value="carpenter">🔩 Carpenter</option>
+        <option value="painter">🎨 Painter</option>
+        <option value="caretaker">🏥 Caretaker</option>
+        <option value="other">🔧 Other</option>
+      </select>
+    </div>
+    <div id="svcCardArea" style="position:relative;width:100%;max-width:400px;margin:0 auto;">
+      <div class="loading" id="svcLoadingState" style="display:none;"><div class="spinner"></div></div>
+      <div class="empty-state" id="svcEmptyState" style="display:none;"><div style="font-size:48px">🛠️</div><p style="margin-top:12px">Koi service nahi mili.<br/>Pehle post karo!</p></div>
+    </div>
+    <div id="svcDots" style="display:flex;justify-content:center;gap:6px;margin:12px 0;"></div>
+    <div class="post-cta" style="margin-top:16px;">
+      <h3 style="font-family:Syne,sans-serif;font-weight:800;font-size:18px;color:var(--cream);margin-bottom:6px;">Apni Service Post Karo 🛠️</h3>
+      <p style="color:rgba(245,240,232,0.65);font-size:13px;margin-bottom:16px;">Driver, Photographer, Plumber — sab yahan!</p>
+      <button class="post-btn" onclick="openServiceModal()">+ Service Post Karo — Free</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -1373,12 +1415,12 @@
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const app = initializeApp({
-    apiKey: "AIzaSyCXUlEIxHBRW9tJisxxpeX-4XIZL9kUlq0",
-    authDomain: "carpoolapp-rideshare.firebaseapp.com",
-    projectId: "carpoolapp-rideshare",
-    storageBucket: "carpoolapp-rideshare.firebasestorage.app",
-    messagingSenderId: "522327176845",
-    appId: "1:522327176845:web:573c073ad246b1204b14c4"
+    apiKey: "AIzaSyDsjtZqmMDWps-4IvCGD_wNMZIC-ZUmObA",
+    authDomain: "triplinko-dev-130be.firebaseapp.com",
+    projectId: "triplinko-dev-130be",
+    storageBucket: "triplinko-dev-130be.firebasestorage.app",
+    messagingSenderId: "657704790694",
+    appId: "1:657704790694:web:716e2e5c981039e7a5a267"
   });
   const db = getFirestore(app);
   window.db = db;
@@ -2030,7 +2072,11 @@
                     <div class="driver-sub">${T[lang].driverVerifiedBadge}</div>
                   </div>
                 </div>
-                <button class="book-btn" style="background:linear-gradient(135deg,#e8652a,#c44d15);" onclick="openHireInquiry('${r.id}','${r.driverPhone}','${r.driverName}','${r.vehicleType}','${r.from}','${r.to||''}','${r.price||''}','${r.vehicleNumber||''}')">${T[lang].hireBookBtn}</button>
+                <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                  <button class="book-btn" style="background:linear-gradient(135deg,#e8652a,#c44d15);" onclick="openHireInquiry('${r.id}','${r.driverPhone}','${r.driverName}','${r.vehicleType}','${r.from}','${r.to||''}','${r.price||''}','${r.vehicleNumber||''}')">${T[lang].hireBookBtn}</button>
+                  <button onclick="editDeleteAlert('hire','${r.id}','${r.driverPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
+                  <button onclick="editDeleteAlert('hire','${r.id}','${r.driverPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+                </div>
               </div>
             </div>
           </div>` : `
@@ -2079,7 +2125,11 @@
                     <div class="driver-sub">${T[lang].driverVerifiedBadge}</div>
                   </div>
                 </div>
-                <button class="book-btn" onclick="openBooking('${r.id}','${r.from}','${r.to}','${r.date}','${r.time}','${r.price}','${r.driverPhone}','${r.driverName}','${r.vehicleType||'commercial'}')">${T[lang].rideCardBookBtn}</button>
+                <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+                  <button class="book-btn" onclick="openBooking('${r.id}','${r.from}','${r.to}','${r.date}','${r.time}','${r.price}','${r.driverPhone}','${r.driverName}','${r.vehicleType||'commercial'}')">${T[lang].rideCardBookBtn}</button>
+                  <button onclick="editDeleteAlert('ride','${r.id}','${r.driverPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
+                  <button onclick="editDeleteAlert('ride','${r.id}','${r.driverPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+                </div>
               </div>
             </div>
           </div>`).join('');
@@ -2791,6 +2841,12 @@
           await saveRequest();
         } else if(otpTarget === 'hire_response') {
           await saveHireResponse();
+        } else if(otpTarget === 'edit_delete') {
+          if(window._afterEditDeleteOTP) window._afterEditDeleteOTP();
+        } else if(otpTarget === 'svc_post') {
+          await saveService();
+        } else if(otpTarget === 'svc_contact') {
+          if(_pendingSvcData) await saveSvcContact(_pendingSvcData.name, _pendingSvcData.phone);
         }
       }, 1500);
     } catch(e) {
@@ -3359,8 +3415,19 @@
   window.switchSection = function(tab) {
     const ridesPanel = document.getElementById('ridesPanel');
     const reqPanel   = document.getElementById('requestsPanel');
+    const svcPanel   = document.getElementById('servicesPanel');
     const tabR = document.getElementById('tabRides');
     const tabQ = document.getElementById('tabRequests');
+    const tabS = document.getElementById('tabServices');
+    if(svcPanel) svcPanel.style.display='none';
+    if(tabS) tabS.classList.remove('active');
+    if(tab==='services'){
+      ridesPanel.style.display='none';reqPanel.style.display='none';svcPanel.style.display='block';
+      tabR.classList.remove('active');tabQ.classList.remove('active');tabS.classList.add('active');
+      const nb=document.getElementById('navPostBtn');if(nb)nb.textContent=lang==='hi'?'+ Service Post Karo':'+ Post Service';
+      const sb=document.getElementById('searchBtn');if(sb)sb.textContent=lang==='hi'?'🔍 Dhundo':'🔍 Search';
+      loadServices();return;
+    }
     if(tab === 'rides') {
       ridesPanel.style.display = 'block';
       reqPanel.style.display   = 'none';
@@ -3567,7 +3634,11 @@
                   <div class="driver-sub">🚜 Hire Request</div>
                 </div>
               </div>
-              <button class="book-btn" style="background:linear-gradient(135deg,#7a3800,#c44d15);" onclick="openHireResponse('${r.id}','${r.passengerPhone}','${r.passengerName}','${r.vehicleType}','${(r.from||'').replace(/'/g,'')}','${(r.date||'')}','${(r.to||'').replace(/'/g,'')}','${r.budgetMin||''}','${r.budgetMax||''}')">🚜 Respond Karo</button>
+              <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+              <button class="book-btn" style="background:linear-gradient(135deg,#7a3800,#c44d15);" onclick="openHireResponse('${r.id}','${r.passengerPhone}','${r.passengerName}','${r.vehicleType}','${(r.from||'').replace(/'/g,'')}','${(r.date||'')}','${(r.to||'').replace(/'/g,'')}','${r.budgetMin||''}','${r.budingMax||''}')">🚜 Respond Karo</button>
+              <button onclick="editDeleteAlert('hirereq','${r.id}','${r.passengerPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
+              <button onclick="editDeleteAlert('hirereq','${r.id}','${r.passengerPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+            </div>
             </div>
           </div>
         </div>` : `
@@ -3606,7 +3677,11 @@
                   <div class="driver-sub">🙋 Passenger</div>
                 </div>
               </div>
+              <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
               <button class="book-btn" onclick="handleContactPassenger('${r.passengerPhone}','${r.passengerName}','${r.id}')">${T[lang].contactPassBtn}</button>
+              <button onclick="editDeleteAlert('request','${r.id}','${r.passengerPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
+              <button onclick="editDeleteAlert('request','${r.id}','${r.passengerPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+            </div>
             </div>
           </div>
         </div>`).join('');
@@ -3621,7 +3696,9 @@
   // Nav button — rides tab pe ride modal, requests tab pe request modal
   window.openSmartModal = function() {
     const isReqTab = document.getElementById('tabRequests')?.classList.contains('active');
-    if(isReqTab) openRequestModal();
+    const isSvcTab = document.getElementById('tabServices')?.classList.contains('active');
+    if(isSvcTab) openServiceModal();
+    else if(isReqTab) openRequestModal();
     else openModal();
   };
 
@@ -4173,7 +4250,7 @@
 
   // ─── TELEGRAM BOT ─────────────────────────────────────────
   const TG_TOKEN = '8704530580:AAHF_01YbAw1siPZYP3VhSNzK271TsoEXq0';
-  const TG_GROUP = '-1003927150645';
+  const TG_GROUP = '-5299924976';
   const TG_SUPPORT_GROUP = '-5033769905';
 
   async function sendTelegramMsg(text, chatId = TG_GROUP) {
@@ -4293,6 +4370,330 @@ ${vtype} chahiye
     }
   };
 
+
+  // ─── SERVICES ────────────────────────────────────────────────
+  const SVC_TYPES = {
+    driver:       { label:'Driver',       emoji:'🚗', color:'#1a3a2a', bg:'#2d5a3d' },
+    photographer: { label:'Photographer', emoji:'📸', color:'#1a237e', bg:'#283593' },
+    plumber:      { label:'Plumber',      emoji:'🔧', color:'#004d40', bg:'#00695c' },
+    electrician:  { label:'Electrician',  emoji:'⚡', color:'#e65100', bg:'#ef6c00' },
+    mason:        { label:'Raj Mistri',   emoji:'🏗️', color:'#37474f', bg:'#455a64' },
+    cook:         { label:'Cook',         emoji:'🍳', color:'#4a148c', bg:'#6a1b9a' },
+    cleaner:      { label:'Cleaner',      emoji:'🧹', color:'#006064', bg:'#00838f' },
+    tech_repair:  { label:'Tech Repair',  emoji:'💻', color:'#1565c0', bg:'#1976d2' },
+    carpenter:    { label:'Carpenter',    emoji:'🔩', color:'#3e2723', bg:'#4e342e' },
+    painter:      { label:'Painter',      emoji:'🎨', color:'#880e4f', bg:'#ad1457' },
+    caretaker:    { label:'Caretaker',    emoji:'🏥', color:'#1b5e20', bg:'#2e7d32' },
+    other:        { label:'Other',        emoji:'🔧', color:'#263238', bg:'#37474f' },
+  };
+
+  function svcCardSVG(type) {
+    const t = SVC_TYPES[type] || SVC_TYPES.other;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${t.color}"/><stop offset="100%" style="stop-color:${t.bg}"/></linearGradient></defs><rect width="400" height="400" fill="url(#bg)"/><text x="200" y="220" font-size="180" text-anchor="middle" opacity="0.07" fill="white">🏔️</text><text x="200" y="180" font-size="90" text-anchor="middle">${t.emoji}</text><text x="200" y="240" font-family="Arial Black,sans-serif" font-weight="900" font-size="28" fill="white" text-anchor="middle" opacity="0.9">${t.label}</text><text x="138" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="22" fill="#f5f0e8">Trip</text><text x="194" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="22" fill="#e8652a">linko.com</text></svg>`)}`;
+  }
+
+  let _allServices = [], _filteredServices = [], _svcIdx = 0;
+  let _currentSvcData = null, _pendingSvcData = null;
+  let _svcTouchStartX = 0;
+
+  window.loadServices = async function() {
+    const svcLoad  = document.getElementById('svcLoadingState');
+    const svcEmpty = document.getElementById('svcEmptyState');
+    if(svcLoad)  svcLoad.style.display  = 'block';
+    if(svcEmpty) svcEmpty.style.display = 'none';
+    try {
+      const snap = await getDocs(query(collection(db,'services'), orderBy('createdAt','desc')));
+      _allServices = snap.docs.map(d => ({id:d.id,...d.data()}));
+      // Deduplicate locations case-insensitively, show proper case
+      const locMap = {};
+      _allServices.forEach(s => {
+        if(s.location) {
+          const key = s.location.toLowerCase().trim();
+          if(!locMap[key]) locMap[key] = s.location.trim().replace(/\b\w/g, c => c.toUpperCase());
+        }
+      });
+      const locs = Object.values(locMap);
+      const locSel = document.getElementById('svcLocationFilter');
+      if(locSel) locSel.innerHTML = '<option value="">📍 Sab Locations</option>' + locs.map(l=>`<option value="${l}">${l}</option>`).join('');
+      filterServices();
+    } catch(e) {
+      console.error(e);
+      if(svcEmpty) svcEmpty.style.display = 'block';
+    }
+    if(svcLoad) svcLoad.style.display = 'none';
+  };
+
+  window.filterServices = function() {
+    const locF  = (document.getElementById('svcLocationFilter')?.value || '').toLowerCase().trim();
+    const typeF = document.getElementById('svcTypeFilter')?.value || '';
+    _filteredServices = _allServices.filter(s => {
+      if(locF  && (s.location||'').toLowerCase().trim() !== locF) return false;
+      if(typeF && s.type !== typeF) return false;
+      return true;
+    });
+    _svcIdx = 0;
+    renderSvcCard();
+  };
+
+  function renderSvcCard() {
+    const area  = document.getElementById('svcCardArea');
+    const empty = document.getElementById('svcEmptyState');
+    const dots  = document.getElementById('svcDots');
+    if(!area) return;
+    if(!_filteredServices.length) {
+      area.innerHTML = '';
+      if(empty) empty.style.display = 'block';
+      if(dots)  dots.innerHTML = '';
+      return;
+    }
+    if(empty) empty.style.display = 'none';
+    const s = _filteredServices[_svcIdx];
+    const t = SVC_TYPES[s.type] || SVC_TYPES.other;
+    area.innerHTML = `
+      <div id="svcCard" style="border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);background:var(--white);border:1.5px solid var(--cream-dark);"
+        ontouchstart="svcTouchStart(event)" ontouchend="svcTouchEnd(event)">
+        <div style="position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;">
+          <img src="${svcCardSVG(s.type)}" style="width:100%;height:100%;object-fit:cover;" />
+          <div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border-radius:50px;padding:5px 12px;font-size:12px;font-weight:700;color:white;">${t.emoji} ${t.label}</div>
+          <div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border-radius:50px;padding:5px 12px;font-size:12px;color:white;">${_svcIdx+1}/${_filteredServices.length}</div>
+        </div>
+        <div style="padding:16px;">
+          <div style="font-family:Syne,sans-serif;font-weight:800;font-size:20px;color:var(--green);margin-bottom:4px;">${s.name}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+            <span class="detail-pill">📍 ${s.location}</span>
+            <span class="detail-pill">💰 ₹${s.rate}</span>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase;">About</div>
+          <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:14px;">${s.description||'—'}</div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button onclick="svcPrev()" style="width:44px;height:44px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:18px;cursor:pointer;flex-shrink:0;">←</button>
+            <button onclick="openSvcContact('${s.id}')" style="flex:1;padding:12px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--orange),#c44d15);color:white;font-family:Syne,sans-serif;font-weight:700;font-size:15px;cursor:pointer;">📞 Contact Karo</button>
+            <button onclick="svcNext()" style="width:44px;height:44px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:18px;cursor:pointer;flex-shrink:0;">→</button>
+          </div>
+        </div>
+      </div>`;
+    dots.innerHTML = _filteredServices.map((_,i)=>
+      `<div style="width:${i===_svcIdx?'20px':'8px'};height:8px;border-radius:50px;background:${i===_svcIdx?'var(--orange)':'var(--cream-dark)'};transition:all 0.3s;"></div>`
+    ).join('');
+  }
+
+  window.svcNext = function() { _svcIdx = (_svcIdx + 1) % _filteredServices.length; renderSvcCard(); };
+  window.svcPrev = function() { _svcIdx = (_svcIdx - 1 + _filteredServices.length) % _filteredServices.length; renderSvcCard(); };
+  window.svcTouchStart = function(e) { _svcTouchStartX = e.touches[0].clientX; };
+  window.svcTouchEnd   = function(e) { const d=_svcTouchStartX-e.changedTouches[0].clientX; if(Math.abs(d)>50){d>0?svcNext():svcPrev();} };
+
+  window.openSvcContact = function(svcId) {
+    _currentSvcData = _filteredServices.find(s=>s.id===svcId);
+    if(!_currentSvcData) return;
+    const t = SVC_TYPES[_currentSvcData.type]||SVC_TYPES.other;
+    document.getElementById('svcContactInfo').innerHTML = `
+      <div style="font-size:36px;margin-bottom:6px;">${t.emoji}</div>
+      <div style="font-family:Syne,sans-serif;font-weight:800;font-size:18px;color:white;">${_currentSvcData.name}</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px;">${t.label} • 📍 ${_currentSvcData.location}</div>
+      <div style="font-size:14px;color:var(--orange);font-weight:700;margin-top:6px;">💰 ₹${_currentSvcData.rate}</div>`;
+    document.getElementById('svcContactName').value='';
+    document.getElementById('svcContactPhone').value='';
+    document.getElementById('svcContactTC').checked=false;
+    const scm = document.getElementById('svcContactMarketing'); if(scm) scm.checked=true;
+    document.getElementById('svcContactOverlay').classList.add('active');
+    document.body.style.overflow='hidden';
+  };
+  window.closeSvcContact = function(e){if(e.target===document.getElementById('svcContactOverlay'))closeSvcContactDirect();};
+  window.closeSvcContactDirect = function(){document.getElementById('svcContactOverlay').classList.remove('active');document.body.style.overflow='';};
+
+  window.submitSvcContact = async function() {
+    const name=document.getElementById('svcContactName').value.trim();
+    const phone=document.getElementById('svcContactPhone').value.trim();
+    if(!name){showToast('Naam daalo!','warning');return;}
+    if(!/^[6-9]\d{9}$/.test(phone)){showToast('Sahi 10 digit number daalo','warning');return;}
+    if(!document.getElementById('svcContactTC').checked){showToast('Terms accept karo!','warning');return;}
+    const btn=document.querySelector('#svcContactOverlay .submit-btn');
+    btn.disabled=true;btn.textContent='⏳...';
+    try {
+      const already=await isPhoneVerified(phone);
+      if(already){await saveSvcContact(name,phone);}
+      else{_pendingSvcData={name,phone};const sent=await sendOTP(phone);if(sent){closeSvcContactDirect();showOTPModal(phone,'svc_contact');}}
+    }catch(e){console.error(e);showToast('❌ Error','error');}
+    btn.disabled=false;btn.textContent='📞 Call Karo';
+  };
+
+  async function saveSvcContact(name,phone) {
+    const t = SVC_TYPES[_currentSvcData.type] || SVC_TYPES.other;
+    // Telegram support group mein bhejo
+    sendTelegramMsg(
+      `🛠️ <b>Service Contact — Triplinko!</b>\n\n` +
+      `━━ ${t.emoji} <b>Provider Detail</b> ━━\n` +
+      `👤 Provider: <b>${_currentSvcData.name}</b>\n` +
+      `🔧 Type: ${t.label}\n` +
+      `📍 Location: ${_currentSvcData.location}\n` +
+      `💰 Rate: ₹${_currentSvcData.rate}\n` +
+      `📞 Provider Phone: <b>${_currentSvcData.phone}</b>\n\n` +
+      `━━ 🙋 <b>Customer Detail</b> ━━\n` +
+      `👤 Customer: <b>${name}</b>\n` +
+      `📞 Customer Phone: <b>${phone}</b>\n\n` +
+      `#TriplinkoService #PahadiSawari`,
+      TG_SUPPORT_GROUP
+    );
+    try{await addDoc(collection(db,'driver_contacts'),{postType:'service',serviceId:_currentSvcData.id,serviceType:_currentSvcData.type,providerName:_currentSvcData.name,providerPhone:_currentSvcData.phone,contactName:name,contactPhone:phone,contactedAt:serverTimestamp()});}catch(e){console.error(e);}
+    closeSvcContactDirect();
+    showToast('📞 Connecting...','success');
+    setTimeout(()=>{window.location.href='tel:+91'+_currentSvcData.phone;},800);
+    _currentSvcData=null;
+  }
+
+  window.openServiceModal = function(){
+    document.getElementById('serviceModalOverlay').classList.add('active');
+    document.getElementById('svcTC').checked=false;
+    const sm = document.getElementById('svcMarketing'); if(sm) sm.checked=true;
+    document.getElementById('svcType').value='';
+    ['svcName','svcPhone','svcLocation','svcRate','svcDesc','svcEmail'].forEach(id=>{document.getElementById(id).value='';});
+    document.body.style.overflow='hidden';
+  };
+  window.closeServiceModal = function(e){if(e.target===document.getElementById('serviceModalOverlay'))closeServiceModalDirect();};
+  window.closeServiceModalDirect = function(){document.getElementById('serviceModalOverlay').classList.remove('active');document.body.style.overflow='';};
+
+  window.submitService = async function() {
+    const v=id=>document.getElementById(id).value.trim();
+    const type=v('svcType'),name=v('svcName'),phone=v('svcPhone'),loc=v('svcLocation'),rate=v('svcRate'),desc=v('svcDesc');
+    if(!type||!name||!phone||!loc||!rate||!desc){showToast('Sab zaroori fields bharo! ⬆️','warning');return;}
+    if(!/^[6-9]\d{9}$/.test(phone)){showToast('Sahi 10 digit number daalo','warning');return;}
+    if(!document.getElementById('svcTC').checked){showToast('Terms accept karo!','warning');return;}
+    _pendingSvcData={type,name,phone,location:loc,rate,description:desc,email:v('svcEmail')};
+    const btn=document.querySelector('#serviceModalOverlay .submit-btn');
+    btn.disabled=true;btn.textContent='⏳...';
+    try{
+      const already=await isPhoneVerified(phone);
+      if(already){await saveService();}
+      else{otpTarget='svc_post';const sent=await sendOTP(phone);if(sent){closeServiceModalDirect();showOTPModal(phone,'svc_post');}}
+    }catch(e){console.error(e);showToast('❌ Error','error');}
+    btn.disabled=false;btn.textContent='✅ Service Post Karo';
+  };
+
+  async function saveService() {
+    if(!_pendingSvcData)return;
+    const d=_pendingSvcData;
+    const normLoc = d.location ? d.location.trim().replace(/\b\w/g, c => c.toUpperCase()) : d.location;
+    const svcRef = doc(collection(db,'services'));
+    const svcId  = svcRef.id;
+    // Telegram message
+    const t = SVC_TYPES[d.type] || SVC_TYPES.other;
+    sendTelegramMsg(
+      `🛠️ <b>New Service — Triplinko!</b>\n\n` +
+      `${t.emoji} <b>${t.label}</b>\n` +
+      `👤 ${d.name}\n` +
+      `📍 ${normLoc}\n` +
+      `💰 ₹${d.rate}\n` +
+      `📝 ${d.description}\n\n` +
+      `📞 Contact karo: <a href="https://triplinko.com?service=${svcId}">triplinko.com?service=${svcId}</a>\n\n` +
+      `#TriplinkoService #PahadiSawari #Uttarakhand`
+    );
+    try{
+      await setDoc(svcRef,{...d, location: normLoc, verified:true, createdAt:serverTimestamp()});
+      closeServiceModalDirect();
+      showToast('🎉 Service post ho gayi!','success');
+      loadServices();
+    }catch(e){showToast('❌ Error','error');}
+    _pendingSvcData=null;
+  }
+
+  // ─── EDIT / DELETE ────────────────────────────────────────────
+  let _edAction=null,_edType=null,_edId=null,_edPhone=null,_edData=null;
+
+  window.editDeleteAlert = function(type,id,phone,action) {
+    _edAction=action;_edType=type;_edId=id;_edPhone=phone;
+    document.getElementById('edAlertEmoji').textContent = action==='delete'?'🗑️':'✏️';
+    document.getElementById('edAlertTitle').textContent = action==='delete'
+      ?(lang==='hi'?'Delete karna chahte ho?':'Want to delete this?')
+      :(lang==='hi'?'Edit karna chahte ho?':'Want to edit this?');
+    document.getElementById('edAlertOverlay').style.display='flex';
+    document.body.style.overflow='hidden';
+  };
+
+  window.closeEdAlert = function(){document.getElementById('edAlertOverlay').style.display='none';document.body.style.overflow='';_edAction=_edType=_edId=_edPhone=null;};
+
+  window.confirmEditDelete = async function() {
+    if(!_edPhone||!_edId)return;
+    const btn=document.getElementById('edAlertConfirmBtn');
+    btn.textContent='⏳...';btn.disabled=true;
+    try {
+      const {doc:fsDoc,getDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const collName=(_edType==='request'||_edType==='hirereq')?'ride_requests':'rides';
+      const snap=await getDoc(fsDoc(db,collName,_edId));
+      if(snap.exists())_edData={id:snap.id,...snap.data()};
+    }catch(e){console.error(e);}
+    const sent=await sendOTP(_edPhone);
+    if(sent){document.getElementById('edAlertOverlay').style.display='none';document.body.style.overflow='';otpTarget='edit_delete';showOTPModal(_edPhone,'edit_delete');}
+    btn.textContent='📲 Haan, OTP Bhejo';btn.disabled=false;
+  };
+
+  window._afterEditDeleteOTP = async function() {
+    if(_edAction==='delete')await performDelete();
+    else openEditForm();
+  };
+
+  async function performDelete() {
+    try{
+      const{doc:fsDoc,deleteDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      const collName=(_edType==='request'||_edType==='hirereq')?'ride_requests':'rides';
+      await deleteDoc(fsDoc(db,collName,_edId));
+      showToast('🗑️ Delete ho gaya!','success');
+      if(_edType==='request'||_edType==='hirereq')loadRequests();else loadRides();
+    }catch(e){console.error(e);showToast('❌ Delete nahi hua','error');}
+    _edAction=_edType=_edId=_edPhone=_edData=null;
+  }
+
+  function openEditForm() {
+    if(!_edData){showToast('❌ Data load nahi hua.','error');return;}
+    const d=_edData;
+    const isReq=_edType==='request'||_edType==='hirereq';
+    document.getElementById('editRideTitle').textContent=isReq?'✏️ Request Edit Karo':'✏️ Ride Edit Karo';
+    if(isReq){
+      document.getElementById('editFormContent').innerHTML=`
+        <div class="form-group"><label class="form-label">Kahan se *</label><input class="form-input" id="ef_from" value="${d.from||''}" /></div>
+        <div class="form-group"><label class="form-label">Kahan tak *</label><input class="form-input" id="ef_to" value="${d.to||''}" /></div>
+        <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="ef_date" value="${d.date||''}" /></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Seats</label><input class="form-input" type="number" id="ef_seats" value="${d.seats||1}" min="1" max="10" /></div>
+          <div class="form-group"><label class="form-label">Budget Min (₹)</label><input class="form-input" type="number" id="ef_budgetMin" value="${d.budgetMin||''}" /></div>
+        </div>
+        <div class="form-group"><label class="form-label">Budget Max (₹)</label><input class="form-input" type="number" id="ef_budgetMax" value="${d.budgetMax||''}" /></div>`;
+    }else{
+      document.getElementById('editFormContent').innerHTML=`
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Kahan se *</label><input class="form-input" id="ef_from" value="${d.from||''}" /></div>
+          <div class="form-group"><label class="form-label">Kahan tak *</label><input class="form-input" id="ef_to" value="${d.to||''}" /></div>
+        </div>
+        <div class="form-group"><label class="form-label">Date *</label><input class="form-input" type="date" id="ef_date" value="${d.date||''}" /></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Seats</label><input class="form-input" type="number" id="ef_seats" value="${d.seats||1}" min="1" max="10" /></div>
+          <div class="form-group"><label class="form-label">Price (₹)</label><input class="form-input" type="number" id="ef_price" value="${d.price||''}" /></div>
+        </div>
+        <div class="form-group"><label class="form-label">Gaadi</label><input class="form-input" id="ef_vehicle" value="${d.vehicle||''}" /></div>`;
+    }
+    document.getElementById('editRideOverlay').style.display='block';
+    document.body.style.overflow='hidden';
+  }
+
+  window.closeEditRide = function(){document.getElementById('editRideOverlay').style.display='none';document.body.style.overflow='';};
+
+  window.submitEdit = async function() {
+    const isReq=_edType==='request'||_edType==='hirereq';
+    const collName=isReq?'ride_requests':'rides';
+    const gv=id=>document.getElementById(id)?.value?.trim();
+    const updates=isReq
+      ?{from:gv('ef_from'),to:gv('ef_to'),date:gv('ef_date'),seats:parseInt(gv('ef_seats'))||1,budgetMin:parseInt(gv('ef_budgetMin'))||0,budgetMax:parseInt(gv('ef_budgetMax'))||0}
+      :{from:gv('ef_from'),to:gv('ef_to'),date:gv('ef_date'),seats:parseInt(gv('ef_seats'))||1,price:parseInt(gv('ef_price'))||0,vehicle:gv('ef_vehicle')};
+    if(!updates.from||!updates.to||!updates.date){showToast('Zaroori fields bharo!','warning');return;}
+    try{
+      const{doc:fsDoc,updateDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+      await updateDoc(fsDoc(db,collName,_edId),updates);
+      showToast('✅ Update ho gaya!','success');
+      closeEditRide();
+      if(isReq)loadRequests();else loadRides();
+    }catch(e){console.error(e);showToast('❌ Update nahi hua','error');}
+    _edAction=_edType=_edId=_edPhone=_edData=null;
+  };
+
   // Expose chat functions
   window._toggleChat = window.toggleChat;
   window._sendChatMsg = window.sendChatMsg;
@@ -4409,6 +4810,44 @@ ${vtype} chahiye
           setTimeout(() => openHireResponse(hirereqId, r.passengerPhone, r.passengerName, r.vehicleType, r.from || '', r.date || '', r.to || '', r.budgetMin || '', r.budgetMax || ''), 500);
         }
       } catch(e) { console.error('Deep link hirereq error:', e); }
+    }
+
+    // Service deep link
+    const serviceId = params.get('service');
+    if(serviceId) {
+      try {
+        const snap = await getDoc(fsDoc(db, 'services', serviceId));
+        if(snap.exists()) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+          // Services tab kholo
+          switchSection('services');
+          // Wait for loadServices to complete then find card and open contact
+          setTimeout(async () => {
+            // Agar already loaded nahi toh load karo
+            if(!_allServices.length) await window.loadServices();
+            // Card ko find karke select karo
+            const idx = _filteredServices.findIndex(s => s.id === serviceId);
+            if(idx !== -1) {
+              _svcIdx = idx;
+              renderSvcCard();
+              setTimeout(() => openSvcContact(serviceId), 300);
+            } else {
+              // Filter mein nahi mila — reset filter karke dhundo
+              document.getElementById('svcLocationFilter').value = '';
+              document.getElementById('svcTypeFilter').value = '';
+              filterServices();
+              const idx2 = _filteredServices.findIndex(s => s.id === serviceId);
+              if(idx2 !== -1) {
+                _svcIdx = idx2;
+                renderSvcCard();
+                setTimeout(() => openSvcContact(serviceId), 300);
+              }
+            }
+          }, 1200);
+        } else {
+          showToast('Yeh service ab available nahi hai.', 'warning');
+        }
+      } catch(e) { console.error('Service deep link error:', e); }
     }
   })();
 
@@ -4800,6 +5239,127 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
     }
   }
 </script>
+<!-- SERVICE POST MODAL -->
+<div class="modal-overlay" id="serviceModalOverlay" onclick="closeServiceModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-drag"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="modal-title">🛠️ Service Post Karo</div>
+          <div class="modal-sub">Customers tumhe directly call karenge</div>
+        </div>
+        <button class="close-btn" onclick="closeServiceModalDirect()">✕</button>
+      </div>
+    </div>
+    <div class="modal-scroll">
+      <div class="form-group">
+        <label class="form-label">Service Type *</label>
+        <select class="form-select" id="svcType">
+          <option value="" disabled selected>-- Select Karo *</option>
+          <option value="driver">🚗 Driver</option>
+          <option value="photographer">📸 Photographer</option>
+          <option value="plumber">🔧 Plumber</option>
+          <option value="electrician">⚡ Electrician</option>
+          <option value="mason">🏗️ Raj Mistri</option>
+          <option value="cook">🍳 Cook</option>
+          <option value="cleaner">🧹 Cleaner</option>
+          <option value="tech_repair">💻 Tech Repair</option>
+          <option value="carpenter">🔩 Carpenter</option>
+          <option value="painter">🎨 Painter</option>
+          <option value="caretaker">🏥 Caretaker</option>
+          <option value="other">🔧 Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tumhara Naam *</label>
+        <input class="form-input" id="svcName" placeholder="eg. Ramesh Kumar" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number *</label>
+        <input class="form-input" id="svcPhone" placeholder="eg. 9876543210" type="tel" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location / Area *</label>
+        <input class="form-input" id="svcLocation" placeholder="eg. Dehradun, Mussoorie" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rate (₹) *</label>
+        <input class="form-input" id="svcRate" placeholder="eg. 500/day ya 200/hour" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description *</label>
+        <textarea class="form-input" id="svcDesc" rows="3" placeholder="eg. 10 saal ka experience..." style="resize:none;line-height:1.5;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email (Optional)</label>
+        <input class="form-input" id="svcEmail" type="email" placeholder="eg. ramesh@gmail.com" />
+      </div>
+      <div class="tc-box">
+        <input type="checkbox" id="svcTC" />
+        <label for="svcTC">Main <a href="#" onclick="showPage('terms')">Terms & Conditions</a> aur <a href="#" onclick="showPage('disclaimer')">Disclaimer</a> se agree karta/karti hoon. Meri service ki safety meri responsibility hai.</label>
+      </div>
+      <div class="tc-box">
+        <input type="checkbox" id="svcMarketing" checked />
+        <label for="svcMarketing">📢 Mujhe naye offers, promotions aur updates bhejne ki permission hai (number/email pe)</label>
+      </div>
+      <button class="submit-btn" onclick="submitService()">✅ Service Post Karo</button>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICE CONTACT MODAL -->
+<div class="booking-overlay" id="svcContactOverlay" onclick="closeSvcContact(event)">
+  <div class="booking-modal">
+    <button class="close-btn" onclick="closeSvcContactDirect()">✕</button>
+    <div class="modal-title">📞 Contact Karo</div>
+    <div class="modal-sub">Apna number do — provider ko call karenge</div>
+    <div id="svcContactInfo" style="background:linear-gradient(135deg,#1a3a2a,#2d5a3d);border-radius:16px;padding:16px;margin-bottom:20px;text-align:center;"></div>
+    <div class="form-group">
+      <label class="form-label">Tumhara Naam *</label>
+      <input class="form-input" id="svcContactName" placeholder="eg. Rahul Sharma" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tumhara Phone *</label>
+      <input class="form-input" id="svcContactPhone" placeholder="eg. 9876543210" type="tel" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+    </div>
+    <div class="tc-box">
+      <input type="checkbox" id="svcContactTC" />
+      <label for="svcContactTC">Main <a href="#" onclick="showPage('terms')">Terms & Conditions</a> aur <a href="#" onclick="showPage('disclaimer')">Disclaimer</a> se agree karta/karti hoon. Provider se direct deal meri responsibility hai.</label>
+    </div>
+    <div class="tc-box">
+      <input type="checkbox" id="svcContactMarketing" checked />
+      <label for="svcContactMarketing">📢 Mujhe naye offers aur updates bhejne ki permission hai (number/email pe)</label>
+    </div>
+    <button class="submit-btn" onclick="submitSvcContact()" style="background:linear-gradient(135deg,#e8652a,#c44d15);">📞 Call Karo</button>
+  </div>
+</div>
+
+<!-- EDIT/DELETE ALERT MODAL -->
+<div id="edAlertOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:800;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--white);border-radius:24px;padding:28px 24px;width:100%;max-width:360px;text-align:center;animation:slideUp 0.3s ease;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--green),var(--orange));"></div>
+    <div id="edAlertEmoji" style="font-size:48px;margin-bottom:12px;">✏️</div>
+    <div id="edAlertTitle" style="font-family:Syne,sans-serif;font-weight:800;font-size:20px;color:var(--green);margin-bottom:8px;">Edit karna chahte ho?</div>
+    <div id="edAlertSub" style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:24px;">Aapke registered number pe OTP bheja jayega 📱</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="closeEdAlert()" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--cream-dark);background:var(--cream);font-family:Syne,sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Nahi</button>
+      <button id="edAlertConfirmBtn" onclick="confirmEditDelete()" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--green);color:white;font-family:Syne,sans-serif;font-weight:700;font-size:14px;cursor:pointer;">📲 Haan, OTP Bhejo</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT FORM MODAL -->
+<div id="editRideOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:800;overflow-y:auto;padding:16px 16px 40px;">
+  <div style="background:var(--white);border-radius:20px;padding:24px 20px;width:100%;max-width:480px;margin:60px auto 0;animation:slideUp 0.3s ease;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <div style="font-family:Syne,sans-serif;font-weight:800;font-size:18px;color:var(--green);" id="editRideTitle">✏️ Edit Karo</div>
+      <button onclick="closeEditRide()" style="background:var(--cream-dark);border:none;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;">✕</button>
+    </div>
+    <div id="editFormContent"></div>
+    <button onclick="submitEdit()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--green);color:white;font-family:Syne,sans-serif;font-weight:700;font-size:15px;cursor:pointer;margin-top:8px;">✅ Save Karo</button>
+  </div>
+</div>
+
 </body>
 </html>
- 
