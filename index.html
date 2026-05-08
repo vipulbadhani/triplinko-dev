@@ -2763,7 +2763,7 @@
           if(isNewEmail) {
             // Email verified karne ka token banao
             const verifyToken = Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15);
-            const verifyLink = 'https://triplinko.com?verify=' + verifyToken;
+            const verifyLink = `${BASE_URL}?verify=` + verifyToken;
 
             // Token Firestore mein save karo
             await addDoc(collection(db,'email_verifications'), {
@@ -2806,7 +2806,7 @@
                       <p style="color:#aaa;font-size:11px;margin:16px 0 0;text-align:center;">Yeh link 24 ghante valid hai. Agar aapne signup nahi kiya toh ignore karein.</p>
                     </div>
                     <div style="background:#1a3a2a;padding:16px;text-align:center;">
-                      <a href="https://triplinko.com" style="color:#e8652a;text-decoration:none;font-weight:bold;font-size:14px;">triplinko.com</a>
+                      <a href=BASE_URL style="color:#e8652a;text-decoration:none;font-weight:bold;font-size:14px;">triplinko.com</a>
                       <p style="color:rgba(245,240,232,0.4);font-size:11px;margin:6px 0 0;">Dehradun se Pahad tak</p>
                     </div>
                   </div>
@@ -2890,7 +2890,7 @@
       if(emailDoc.exists()) return; // Already registered — skip
 
       const verifyToken = Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15);
-      const verifyLink = 'https://triplinko.com?verify=' + verifyToken;
+      const verifyLink = `${BASE_URL}?verify=` + verifyToken;
 
       // Email ko document ID se save karo — no duplicates possible
       await setDoc(emailDocRef, {
@@ -2918,7 +2918,7 @@
               <p style="color:#aaa;font-size:11px;margin-top:16px;">Link 24 ghante valid hai.</p>
             </div>
             <div style="background:#1a3a2a;padding:14px;text-align:center;">
-              <a href="https://triplinko.com" style="color:#e8652a;text-decoration:none;font-weight:bold;">triplinko.com</a>
+              <a href=BASE_URL style="color:#e8652a;text-decoration:none;font-weight:bold;">triplinko.com</a>
             </div>
           </div>`
         }
@@ -4239,7 +4239,7 @@
               </div>
             </div>
             <div style="background:#1c3d2a;padding:12px;text-align:center">
-              <a href="https://triplinko.com" style="color:#d4520f;text-decoration:none;font-weight:bold">triplinko.com</a>
+              <a href=BASE_URL style="color:#d4520f;text-decoration:none;font-weight:bold">triplinko.com</a>
             </div>
           </div>`
         },
@@ -4249,6 +4249,8 @@
   }
 
   // ─── TELEGRAM BOT ─────────────────────────────────────────
+  const BASE_URL = 'https://vipulbadhani.github.io/triplinko-dev';
+
   const TG_TOKEN = '8704530580:AAHF_01YbAw1siPZYP3VhSNzK271TsoEXq0';
   const TG_GROUP = '-5299924976';
   const TG_SUPPORT_GROUP = '-5033769905';
@@ -4351,7 +4353,7 @@ ${vtype} chahiye
 
   // Share function — WhatsApp/general
   window.shareRide = function(id, type, from, to, date, time, price, seats, vehicle, vnum, driverName) {
-    const url = type === 'hire' ? 'https://triplinko.com?hire=' + id : 'https://triplinko.com?ride=' + id;
+    const url = type === 'hire' ? `${BASE_URL}?hire=` + id : `${BASE_URL}?ride=` + id;
     const text = `🚗 Ride Available — Triplinko!\n\n📍 ${from} → ${to}\n📅 ${date} | 🕐 ${time}\n💺 ${seats} seat | 💰 ₹${price}/seat\n🚙 ${vehicle} | ${vnum}\n👤 ${driverName}\n\n📞 Book: ${url}`;
     if(navigator.share) {
       navigator.share({ title: 'Triplinko Ride', text });
@@ -4361,7 +4363,7 @@ ${vtype} chahiye
   };
 
   window.shareRequest = function(id, type, from, to, date, seats, budgetMin, budgetMax, name) {
-    const url = type === 'hirereq' ? 'https://triplinko.com?hirereq=' + id : 'https://triplinko.com?request=' + id;
+    const url = type === 'hirereq' ? `${BASE_URL}?hirereq=` + id : `${BASE_URL}?request=` + id;
     const text = `🙋 Ride Request — Triplinko!\n\n📍 ${from} → ${to}\n📅 ${date} | 💺 ${seats} seat\n💰 Budget: ₹${budgetMin}${budgetMax && budgetMax !== budgetMin ? ' – ₹' + budgetMax : ''}\n👤 ${name}\n\n📞 Contact: ${url}`;
     if(navigator.share) {
       navigator.share({ title: 'Triplinko Request', text });
