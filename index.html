@@ -499,7 +499,7 @@
     /* BOOKING MODAL */
     .book-btn { background: var(--green); color: white; border: none; padding: 10px 18px; border-radius: 50px; font-family: 'DM Sans',sans-serif; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; transition: background 0.2s; }
     .book-btn:hover { background: var(--green-mid); }
-    .booking-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 300; overflow-y: auto; padding: 16px 16px 40px; }
+    .booking-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 600; overflow-y: auto; padding: 16px 16px 40px; }
     .booking-overlay.active { display: block; }
     .booking-modal { background: var(--white); border-radius: 20px; padding: 24px 20px; width: 100%; max-width: 420px; margin: 60px auto 0; animation: slideUp 0.3s ease; }
     .booking-ride-info { background: var(--cream); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; }
@@ -1499,8 +1499,8 @@
       toastSuccess:'🎉 Ride post ho gayi! Passengers call karenge.',
       toastError:'❌ Error hua, dobara try karo.',
       callBtn:'📞 Call', seatKhali:'seat khali',
-      rideCardBookBtn:'📞 Book Karo', driverVerifiedBadge:'✅ Verified',
-      contactPassBtn:'📞 Contact', passengerReqLabel:'🙋 Passenger Request',
+      rideCardBookBtn:'📞 Ride Karo', driverVerifiedBadge:'✅ Verified',
+      contactPassBtn:'📞 Contact Karo', passengerReqLabel:'🙋 Passenger Request',
       aaj:'Aaj', kal:'Kal',
       errName:'Naam zaroori hai', errFrom:'Zaroori hai', errTo:'Zaroori hai', errPrice:'Zaroori hai',
       phoneErrMsg:'10 digit Indian number daalo (6/7/8/9 se shuru)',
@@ -1593,7 +1593,7 @@
       toastSuccess:'🎉 Ride posted! Passengers will call you.',
       toastError:'❌ Something went wrong. Please try again.',
       callBtn:'📞 Call', seatKhali:'seat(s) available',
-      rideCardBookBtn:'📞 Book', driverVerifiedBadge:'✅ Verified',
+      rideCardBookBtn:'📞 Book Now', driverVerifiedBadge:'✅ Verified',
       contactPassBtn:'📞 Contact', passengerReqLabel:'🙋 Passenger Request',
       aaj:'Today', kal:'Tomorrow',
       errName:'Name is required', errFrom:'Required', errTo:'Required', errPrice:'Required',
@@ -2073,9 +2073,9 @@
                   </div>
                 </div>
                 <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-                  <button class="book-btn" style="background:linear-gradient(135deg,#e8652a,#c44d15);" onclick="openHireInquiry('${r.id}','${r.driverPhone}','${r.driverName}','${r.vehicleType}','${r.from}','${r.to||''}','${r.price||''}','${r.vehicleNumber||''}')">${T[lang].hireBookBtn}</button>
                   <button onclick="editDeleteAlert('hire','${r.id}','${r.driverPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
                   <button onclick="editDeleteAlert('hire','${r.id}','${r.driverPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+                  <button class="book-btn" style="background:linear-gradient(135deg,#e8652a,#c44d15);" onclick="openHireInquiry('${r.id}','${r.driverPhone}','${r.driverName}','${r.vehicleType}','${r.from}','${r.to||''}','${r.price||''}','${r.vehicleNumber||''}')">${T[lang].hireBookBtn}</button>
                 </div>
               </div>
             </div>
@@ -2126,9 +2126,9 @@
                   </div>
                 </div>
                 <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-                  <button class="book-btn" onclick="openBooking('${r.id}','${r.from}','${r.to}','${r.date}','${r.time}','${r.price}','${r.driverPhone}','${r.driverName}','${r.vehicleType||'commercial'}')">${T[lang].rideCardBookBtn}</button>
                   <button onclick="editDeleteAlert('ride','${r.id}','${r.driverPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
                   <button onclick="editDeleteAlert('ride','${r.id}','${r.driverPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+                  <button class="book-btn" onclick="openBooking('${r.id}','${r.from}','${r.to}','${r.date}','${r.time}','${r.price}','${r.driverPhone}','${r.driverName}','${r.vehicleType||'commercial'}')">${T[lang].rideCardBookBtn}</button>
                 </div>
               </div>
             </div>
@@ -3635,9 +3635,9 @@
                 </div>
               </div>
               <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-              <button class="book-btn" style="background:linear-gradient(135deg,#7a3800,#c44d15);" onclick="openHireResponse('${r.id}','${r.passengerPhone}','${r.passengerName}','${r.vehicleType}','${(r.from||'').replace(/'/g,'')}','${(r.date||'')}','${(r.to||'').replace(/'/g,'')}','${r.budgetMin||''}','${r.budingMax||''}')">🚜 Respond Karo</button>
               <button onclick="editDeleteAlert('hirereq','${r.id}','${r.passengerPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
               <button onclick="editDeleteAlert('hirereq','${r.id}','${r.passengerPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+              <button class="book-btn" style="background:linear-gradient(135deg,#7a3800,#c44d15);" onclick="openHireResponse('${r.id}','${r.passengerPhone}','${r.passengerName}','${r.vehicleType}','${(r.from||'').replace(/'/g,'')}','${(r.date||'')}','${(r.to||'').replace(/'/g,'')}','${r.budgetMin||''}','${r.budingMax||''}')">🚜 Respond Karo</button>
             </div>
             </div>
           </div>
@@ -3678,9 +3678,9 @@
                 </div>
               </div>
               <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
-              <button class="book-btn" onclick="handleContactPassenger('${r.passengerPhone}','${r.passengerName}','${r.id}')">${T[lang].contactPassBtn}</button>
               <button onclick="editDeleteAlert('request','${r.id}','${r.passengerPhone}','edit')" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.2);color:white;cursor:pointer;padding:7px 9px;border-radius:50%;">✏️</button>
               <button onclick="editDeleteAlert('request','${r.id}','${r.passengerPhone}','delete')" style="background:rgba(220,38,38,0.15);border:1.5px solid rgba(220,38,38,0.3);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;">🗑️</button>
+              <button class="book-btn" onclick="handleContactPassenger('${r.passengerPhone}','${r.passengerName}','${r.id}')">${T[lang].contactPassBtn}</button>
             </div>
             </div>
           </div>
@@ -4283,7 +4283,7 @@
 🚙 ${r.vehicle} | ${plate} ${r.vehicleNumber || ''}
 👤 Driver: ${r.driverName}
 
-📞 Book karo: <a href="https://triplinko.com?ride=${r.id}">triplinko.com?ride=${r.id}</a>
+📞 Book karo: <a href="${BASE_URL}?ride=${r.id}">${BASE_URL}?ride=${r.id}</a>
 
 #TriplinkoRide #PahadiSawari #Uttarakhand`;
   }
@@ -4296,7 +4296,7 @@
 💰 Budget: ₹${r.budgetMin}${r.budgetMax && r.budgetMax !== r.budgetMin ? ' – ₹' + r.budgetMax : ''}
 👤 Passenger: ${r.passengerName}
 
-📞 Contact karo: <a href="https://triplinko.com?request=${r.id}">triplinko.com?request=${r.id}</a>
+📞 Contact karo: <a href="${BASE_URL}?request=${r.id}">${BASE_URL}?request=${r.id}</a>
 
 #TriplinkoRequest #PahadiSawari #Uttarakhand`;
   }
@@ -4311,7 +4311,7 @@ ${vtype} ${r.vehicle ? '| ' + r.vehicle : ''}
 💰 ₹${r.price}/day
 👤 Owner: ${r.driverName}
 
-📞 Hire karo: <a href="https://triplinko.com?hire=${r.id}">triplinko.com?hire=${r.id}</a>
+📞 Hire karo: <a href="${BASE_URL}?hire=${r.id}">${BASE_URL}?hire=${r.id}</a>
 
 #TriplinkoHire #JCBHire #PahadiSawari #Uttarakhand`;
   }
@@ -4346,7 +4346,7 @@ ${vtype} chahiye
 📍 Location: <b>${r.location}</b>
 📅 Date: ${r.date || 'N/A'}${r.work ? '\n🔧 Kaam: ' + r.work : ''}${r.budgetMin ? '\n💰 Budget: ₹' + r.budgetMin + (r.budgetMax && r.budgetMax !== r.budgetMin ? ' – ₹' + r.budgetMax : '') + '/day' : ''}
 
-👉 Detail dekho: <a href="https://triplinko.com?hirereq=${r.id}">triplinko.com?hirereq=${r.id}</a>
+👉 Detail dekho: <a href="${BASE_URL}?hirereq=${r.id}">${BASE_URL}?hirereq=${r.id}</a>
 
 #TriplinkoHire #PahadiSawari #Uttarakhand`;
   }
@@ -4391,7 +4391,7 @@ ${vtype} chahiye
 
   function svcCardSVG(type) {
     const t = SVC_TYPES[type] || SVC_TYPES.other;
-    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${t.color}"/><stop offset="100%" style="stop-color:${t.bg}"/></linearGradient></defs><rect width="400" height="400" fill="url(#bg)"/><text x="200" y="220" font-size="180" text-anchor="middle" opacity="0.07" fill="white">🏔️</text><text x="200" y="180" font-size="90" text-anchor="middle">${t.emoji}</text><text x="200" y="240" font-family="Arial Black,sans-serif" font-weight="900" font-size="28" fill="white" text-anchor="middle" opacity="0.9">${t.label}</text><text x="138" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="22" fill="#f5f0e8">Trip</text><text x="194" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="22" fill="#e8652a">linko.com</text></svg>`)}`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:${t.color}"/><stop offset="100%" style="stop-color:${t.bg}"/></linearGradient></defs><rect width="400" height="400" fill="url(#bg)"/><text x="200" y="220" font-size="180" text-anchor="middle" opacity="0.07" fill="white">🏔️</text><text x="200" y="180" font-size="90" text-anchor="middle">${t.emoji}</text><text x="200" y="240" font-family="Arial Black,sans-serif" font-weight="900" font-size="28" fill="white" text-anchor="middle" opacity="0.9">${t.label}</text><text x="120" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="20" fill="#f5f0e8">Trip</text><text x="163" y="375" font-family="Arial Black,sans-serif" font-weight="900" font-size="20" fill="#e8652a">linko.com</text></svg>`)}`;
   }
 
   let _allServices = [], _filteredServices = [], _svcIdx = 0;
@@ -4460,17 +4460,22 @@ ${vtype} chahiye
           <div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border-radius:50px;padding:5px 12px;font-size:12px;color:white;">${_svcIdx+1}/${_filteredServices.length}</div>
         </div>
         <div style="padding:16px;">
-          <div style="font-family:Syne,sans-serif;font-weight:800;font-size:20px;color:var(--green);margin-bottom:4px;">${s.name}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <div style="font-family:Syne,sans-serif;font-weight:800;font-size:20px;color:var(--green);">${s.name}</div>
+            <button onclick="shareService('${s.id}','${s.name}','${s.type}','${s.location}','${s.rate}')" style="background:var(--orange);border:none;color:white;cursor:pointer;padding:6px 8px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(232,101,42,0.4);width:36px;height:36px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+          </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
             <span class="detail-pill">📍 ${s.location}</span>
             <span class="detail-pill">💰 ₹${s.rate}</span>
           </div>
-          <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase;">About</div>
+          <div style="font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;text-transform:uppercase;">${lang==='hi'?'Parichay':'About'}</div>
           <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:14px;">${s.description||'—'}</div>
-          <div style="display:flex;gap:10px;align-items:center;">
-            <button onclick="svcPrev()" style="width:44px;height:44px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:18px;cursor:pointer;flex-shrink:0;">←</button>
-            <button onclick="openSvcContact('${s.id}')" style="flex:1;padding:12px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--orange),#c44d15);color:white;font-family:Syne,sans-serif;font-weight:700;font-size:15px;cursor:pointer;">📞 Contact Karo</button>
-            <button onclick="svcNext()" style="width:44px;height:44px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:18px;cursor:pointer;flex-shrink:0;">→</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="svcPrev()" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:16px;cursor:pointer;flex-shrink:0;">←</button>
+            <button onclick="editDeleteAlert('service','${s.id}','${s.phone}','edit')" style="background:rgba(26,58,42,0.1);border:1.5px solid rgba(26,58,42,0.2);color:var(--green);cursor:pointer;padding:7px 9px;border-radius:50%;flex-shrink:0;">✏️</button>
+            <button onclick="editDeleteAlert('service','${s.id}','${s.phone}','delete')" style="background:rgba(220,38,38,0.1);border:1.5px solid rgba(220,38,38,0.25);color:#ef4444;cursor:pointer;padding:7px 9px;border-radius:50%;flex-shrink:0;">🗑️</button>
+            <button onclick="openSvcContact('${s.id}')" style="flex:1;padding:10px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--orange),#c44d15);color:white;font-family:Syne,sans-serif;font-weight:700;font-size:14px;cursor:pointer;">📞 Contact Karo</button>
+            <button onclick="svcNext()" style="width:40px;height:40px;border-radius:50%;border:2px solid var(--cream-dark);background:var(--cream);font-size:16px;cursor:pointer;flex-shrink:0;">→</button>
           </div>
         </div>
       </div>`;
@@ -4479,6 +4484,19 @@ ${vtype} chahiye
     ).join('');
   }
 
+
+  window.shareService = function(id, name, type, location, rate) {
+    const t = SVC_TYPES[type] || SVC_TYPES.other;
+    const url = `${BASE_URL}?service=${id}`;
+    const shareText = `${t.emoji} ${t.label} Available — Triplinko!\n\n👤 ${name}\n📍 ${location}\n💰 ₹${rate}\n\n📞 Contact karo: ${url}\n\n#TriplinkoService #PahadiSawari #Uttarakhand`;
+    // Sirf native share ya clipboard — Telegram nahi
+    if(navigator.share) {
+      navigator.share({ title: `${t.label} — Triplinko`, text: shareText })
+        .catch(e => {});
+    } else {
+      navigator.clipboard.writeText(shareText).then(() => showToast('🔗 Copy ho gaya!', 'success'));
+    }
+  };
   window.svcNext = function() { _svcIdx = (_svcIdx + 1) % _filteredServices.length; renderSvcCard(); };
   window.svcPrev = function() { _svcIdx = (_svcIdx - 1 + _filteredServices.length) % _filteredServices.length; renderSvcCard(); };
   window.svcTouchStart = function(e) { _svcTouchStartX = e.touches[0].clientX; };
@@ -4492,11 +4510,17 @@ ${vtype} chahiye
       <div style="font-size:36px;margin-bottom:6px;">${t.emoji}</div>
       <div style="font-family:Syne,sans-serif;font-weight:800;font-size:18px;color:white;">${_currentSvcData.name}</div>
       <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px;">${t.label} • 📍 ${_currentSvcData.location}</div>
-      <div style="font-size:14px;color:var(--orange);font-weight:700;margin-top:6px;">💰 ₹${_currentSvcData.rate}</div>`;
+      <div style="font-size:14px;color:var(--orange);font-weight:700;margin-top:6px;">💰 ₹${_currentSvcData.rate}</div>
+    `;
+
     document.getElementById('svcContactName').value='';
     document.getElementById('svcContactPhone').value='';
     document.getElementById('svcContactTC').checked=false;
     const scm = document.getElementById('svcContactMarketing'); if(scm) scm.checked=true;
+    const svcTitle = document.getElementById('svcContactTitle');
+    const svcSub   = document.getElementById('svcContactSub');
+    if(svcTitle) svcTitle.textContent = lang==='hi' ? '📞 Contact Karo' : '📞 Contact Provider';
+    if(svcSub)   svcSub.textContent   = lang==='hi' ? 'Apna number do — provider se connect karenge' : 'Share your number — we\'ll connect you with the provider';
     document.getElementById('svcContactOverlay').classList.add('active');
     document.body.style.overflow='hidden';
   };
@@ -4586,7 +4610,7 @@ ${vtype} chahiye
       `📍 ${normLoc}\n` +
       `💰 ₹${d.rate}\n` +
       `📝 ${d.description}\n\n` +
-      `📞 Contact karo: <a href="https://triplinko.com?service=${svcId}">triplinko.com?service=${svcId}</a>\n\n` +
+      `📞 Contact karo: <a href="${BASE_URL}?service=${svcId}">${BASE_URL}?service=${svcId}</a>\n\n` +
       `#TriplinkoService #PahadiSawari #Uttarakhand`
     );
     try{
@@ -4603,10 +4627,18 @@ ${vtype} chahiye
 
   window.editDeleteAlert = function(type,id,phone,action) {
     _edAction=action;_edType=type;_edId=id;_edPhone=phone;
-    document.getElementById('edAlertEmoji').textContent = action==='delete'?'🗑️':'✏️';
-    document.getElementById('edAlertTitle').textContent = action==='delete'
-      ?(lang==='hi'?'Delete karna chahte ho?':'Want to delete this?')
-      :(lang==='hi'?'Edit karna chahte ho?':'Want to edit this?');
+    const isHi = lang==='hi';
+    const isDel = action==='delete';
+    document.getElementById('edAlertEmoji').textContent = isDel?'🗑️':'✏️';
+    document.getElementById('edAlertTitle').textContent = isDel
+      ?(isHi?'Delete karna chahte ho?':'Want to delete this?')
+      :(isHi?'Edit karna chahte ho?':'Want to edit this?');
+    document.getElementById('edAlertSub').textContent = isHi
+      ?'Aapke registered number pe OTP bheja jayega verify karne ke liye 📱'
+      :'An OTP will be sent to your registered number for verification 📱';
+    document.getElementById('edAlertConfirmBtn').textContent = isHi?'📲 Haan, OTP Bhejo':'📲 Yes, Send OTP';
+    const cancelBtn = document.querySelector('#edAlertOverlay button:first-of-type');
+    if(cancelBtn) cancelBtn.textContent = isHi?'Nahi':'Cancel';
     document.getElementById('edAlertOverlay').style.display='flex';
     document.body.style.overflow='hidden';
   };
@@ -4619,7 +4651,7 @@ ${vtype} chahiye
     btn.textContent='⏳...';btn.disabled=true;
     try {
       const {doc:fsDoc,getDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-      const collName=(_edType==='request'||_edType==='hirereq')?'ride_requests':'rides';
+      const collName=_edType==='request'||_edType==='hirereq'?'ride_requests':_edType==='service'?'services':'rides';
       const snap=await getDoc(fsDoc(db,collName,_edId));
       if(snap.exists())_edData={id:snap.id,...snap.data()};
     }catch(e){console.error(e);}
@@ -4636,10 +4668,12 @@ ${vtype} chahiye
   async function performDelete() {
     try{
       const{doc:fsDoc,deleteDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-      const collName=(_edType==='request'||_edType==='hirereq')?'ride_requests':'rides';
+      const collName=_edType==='request'||_edType==='hirereq'?'ride_requests':_edType==='service'?'services':'rides';
       await deleteDoc(fsDoc(db,collName,_edId));
       showToast('🗑️ Delete ho gaya!','success');
-      if(_edType==='request'||_edType==='hirereq')loadRequests();else loadRides();
+      if(_edType==='request'||_edType==='hirereq') loadRequests();
+      else if(_edType==='service') loadServices();
+      else loadRides();
     }catch(e){console.error(e);showToast('❌ Delete nahi hua','error');}
     _edAction=_edType=_edId=_edPhone=_edData=null;
   }
@@ -4648,8 +4682,35 @@ ${vtype} chahiye
     if(!_edData){showToast('❌ Data load nahi hua.','error');return;}
     const d=_edData;
     const isReq=_edType==='request'||_edType==='hirereq';
-    document.getElementById('editRideTitle').textContent=isReq?'✏️ Request Edit Karo':'✏️ Ride Edit Karo';
-    if(isReq){
+    const isSvc=_edType==='service';
+    document.getElementById('editRideTitle').textContent=isSvc?'✏️ Service Edit Karo':isReq?'✏️ Request Edit Karo':'✏️ Ride Edit Karo';
+    if(isSvc){
+      document.getElementById('editFormContent').innerHTML=`
+        <div class="form-group"><label class="form-label">Service Type *</label>
+          <select class="form-select" id="ef_svcType">
+            <option value="driver" ${d.type==='driver'?'selected':''}>🚗 Driver</option>
+            <option value="photographer" ${d.type==='photographer'?'selected':''}>📸 Photographer</option>
+            <option value="plumber" ${d.type==='plumber'?'selected':''}>🔧 Plumber</option>
+            <option value="electrician" ${d.type==='electrician'?'selected':''}>⚡ Electrician</option>
+            <option value="mason" ${d.type==='mason'?'selected':''}>🏗️ Raj Mistri</option>
+            <option value="cook" ${d.type==='cook'?'selected':''}>🍳 Cook</option>
+            <option value="cleaner" ${d.type==='cleaner'?'selected':''}>🧹 Cleaner</option>
+            <option value="tech_repair" ${d.type==='tech_repair'?'selected':''}>💻 Tech Repair</option>
+            <option value="carpenter" ${d.type==='carpenter'?'selected':''}>🔩 Carpenter</option>
+            <option value="painter" ${d.type==='painter'?'selected':''}>🎨 Painter</option>
+            <option value="caretaker" ${d.type==='caretaker'?'selected':''}>🏥 Caretaker</option>
+            <option value="other" ${d.type==='other'?'selected':''}>🔧 Other</option>
+          </select></div>
+        <div class="form-group"><label class="form-label">Naam *</label>
+          <input class="form-input" id="ef_svcName" value="${d.name||''}" oninput="this.value=this.value.replace(/\b\w/g,c=>c.toUpperCase())" /></div>
+        <div class="form-group"><label class="form-label">Location *</label>
+          <input class="form-input" id="ef_svcLocation" value="${d.location||''}" oninput="this.value=this.value.replace(/\b\w/g,c=>c.toUpperCase())" /></div>
+        <div class="form-group"><label class="form-label">Rate (₹) *</label>
+          <input class="form-input" id="ef_svcRate" value="${d.rate||''}" /></div>
+        <div class="form-group"><label class="form-label">Description *</label>
+          <textarea class="form-input" id="ef_svcDesc" rows="3" style="resize:none;">${d.description||''}</textarea></div>
+      `;
+    } else if(isReq){
       document.getElementById('editFormContent').innerHTML=`
         <div class="form-group"><label class="form-label">Kahan se *</label><input class="form-input" id="ef_from" value="${d.from||''}" /></div>
         <div class="form-group"><label class="form-label">Kahan tak *</label><input class="form-input" id="ef_to" value="${d.to||''}" /></div>
@@ -4680,8 +4741,21 @@ ${vtype} chahiye
 
   window.submitEdit = async function() {
     const isReq=_edType==='request'||_edType==='hirereq';
-    const collName=isReq?'ride_requests':'rides';
+    const isSvc=_edType==='service';
+    const collName=isSvc?'services':isReq?'ride_requests':'rides';
     const gv=id=>document.getElementById(id)?.value?.trim();
+    if(isSvc){
+      const updates={type:gv('ef_svcType'),name:gv('ef_svcName'),location:gv('ef_svcLocation'),rate:gv('ef_svcRate'),description:gv('ef_svcDesc')};
+      if(!updates.name||!updates.location||!updates.rate){showToast('Zaroori fields bharo!','warning');return;}
+      try{
+        const{doc:fsDoc,updateDoc}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+        await updateDoc(fsDoc(db,collName,_edId),updates);
+        showToast('✅ Update ho gaya!','success');
+        closeEditRide();loadServices();
+      }catch(e){console.error(e);showToast('❌ Update nahi hua','error');}
+      _edAction=_edType=_edId=_edPhone=_edData=null;
+      return;
+    }
     const updates=isReq
       ?{from:gv('ef_from'),to:gv('ef_to'),date:gv('ef_date'),seats:parseInt(gv('ef_seats'))||1,budgetMin:parseInt(gv('ef_budgetMin'))||0,budgetMax:parseInt(gv('ef_budgetMax'))||0}
       :{from:gv('ef_from'),to:gv('ef_to'),date:gv('ef_date'),seats:parseInt(gv('ef_seats'))||1,price:parseInt(gv('ef_price'))||0,vehicle:gv('ef_vehicle')};
@@ -4691,7 +4765,9 @@ ${vtype} chahiye
       await updateDoc(fsDoc(db,collName,_edId),updates);
       showToast('✅ Update ho gaya!','success');
       closeEditRide();
-      if(isReq)loadRequests();else loadRides();
+      if(isReq) loadRequests();
+      else if(isSvc) loadServices();
+      else loadRides();
     }catch(e){console.error(e);showToast('❌ Update nahi hua','error');}
     _edAction=_edType=_edId=_edPhone=_edData=null;
   };
@@ -5275,7 +5351,7 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
       </div>
       <div class="form-group">
         <label class="form-label">Tumhara Naam *</label>
-        <input class="form-input" id="svcName" placeholder="eg. Ramesh Kumar" />
+        <input class="form-input" id="svcName" placeholder="eg. Ramesh Kumar" oninput="this.value=this.value.replace(/\b\w/g,c=>c.toUpperCase())" />
       </div>
       <div class="form-group">
         <label class="form-label">Phone Number *</label>
@@ -5283,7 +5359,7 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
       </div>
       <div class="form-group">
         <label class="form-label">Location / Area *</label>
-        <input class="form-input" id="svcLocation" placeholder="eg. Dehradun, Mussoorie" />
+        <input class="form-input" id="svcLocation" placeholder="eg. Dehradun, Mussoorie" oninput="this.value=this.value.replace(/\b\w/g,c=>c.toUpperCase())" />
       </div>
       <div class="form-group">
         <label class="form-label">Rate (₹) *</label>
@@ -5314,12 +5390,12 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
 <div class="booking-overlay" id="svcContactOverlay" onclick="closeSvcContact(event)">
   <div class="booking-modal">
     <button class="close-btn" onclick="closeSvcContactDirect()">✕</button>
-    <div class="modal-title">📞 Contact Karo</div>
-    <div class="modal-sub">Apna number do — provider ko call karenge</div>
+    <div class="modal-title" id="svcContactTitle">📞 Contact Karo</div>
+    <div class="modal-sub" id="svcContactSub">Apna number do — provider se connect karenge</div>
     <div id="svcContactInfo" style="background:linear-gradient(135deg,#1a3a2a,#2d5a3d);border-radius:16px;padding:16px;margin-bottom:20px;text-align:center;"></div>
     <div class="form-group">
       <label class="form-label">Tumhara Naam *</label>
-      <input class="form-input" id="svcContactName" placeholder="eg. Rahul Sharma" />
+      <input class="form-input" id="svcContactName" placeholder="eg. Rahul Sharma" oninput="this.value=this.value.replace(/\b\w/g,c=>c.toUpperCase())" />
     </div>
     <div class="form-group">
       <label class="form-label">Tumhara Phone *</label>
@@ -5365,3 +5441,4 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
 
 </body>
 </html>
+ 
