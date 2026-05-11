@@ -4897,31 +4897,30 @@ ${vtype} chahiye
         const snap = await getDoc(fsDoc(db, 'services', serviceId));
         if(snap.exists()) {
           window.history.replaceState({}, document.title, window.location.pathname);
+          console.log('Service deep link: serviceId =', serviceId);
           // Services tab kholo
           switchSection('services');
-          // Wait for loadServices to complete then find card and open contact
-          setTimeout(async () => {
-            // Agar already loaded nahi toh load karo
-            if(!_allServices.length) await window.loadServices();
-            // Card ko find karke select karo
-            const idx = _filteredServices.findIndex(s => s.id === serviceId);
-            if(idx !== -1) {
-              _svcIdx = idx;
-              renderSvcCard();
-              setTimeout(() => openSvcContact(serviceId), 300);
-            } else {
-              // Filter mein nahi mila — reset filter karke dhundo
-              document.getElementById('svcLocationFilter').value = '';
-              document.getElementById('svcTypeFilter').value = '';
-              filterServices();
-              const idx2 = _filteredServices.findIndex(s => s.id === serviceId);
-              if(idx2 !== -1) {
-                _svcIdx = idx2;
-                renderSvcCard();
-                setTimeout(() => openSvcContact(serviceId), 300);
-              }
-            }
-          }, 1200);
+          // Data seedha Firestore se load karo
+          const { collection: col2, getDocs: gd2, query: q2, orderBy: ob2 } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+          const svcSnap = await gd2(q2(col2(db,'services'), ob2('createdAt','desc')));
+          _allServices = svcSnap.docs.map(d => ({id:d.id,...d.data()}));
+          _filteredServices = [..._allServices];
+          console.log('Services loaded:', _allServices.length, 'IDs:', _allServices.map(s=>s.id));
+          // Card dhundo
+          const cardIdx = _filteredServices.findIndex(s => s.id === serviceId);
+          console.log('Card index found:', cardIdx);
+          if(cardIdx !== -1) {
+            _svcIdx = cardIdx;
+            renderSvcCard();
+            const locs = [...new Set(_allServices.map(s=>s.location).filter(Boolean))];
+            const locSel = document.getElementById('svcLocationFilter');
+            if(locSel) locSel.innerHTML = '<option value="">📍 Sab Locations</option>' + locs.map(l=>`<option value="${l}">${l}</option>`).join('');
+            console.log('Opening contact popup for:', serviceId);
+            setTimeout(() => openSvcContact(serviceId), 500);
+          } else {
+            console.log('Service not found in list!');
+            showToast('Service load nahi hui, dobara try karo.', 'warning');
+          }
         } else {
           showToast('Yeh service ab available nahi hai.', 'warning');
         }
@@ -5441,4 +5440,3 @@ function sendChatMsg() { if(window._sendChatMsg) window._sendChatMsg(); }
 
 </body>
 </html>
- 
