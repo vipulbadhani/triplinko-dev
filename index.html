@@ -4853,6 +4853,7 @@ ${vtype} chahiye
         if(snap.exists()) {
           const r = snap.data();
           window.history.replaceState({}, document.title, window.location.pathname);
+          switchSection('rides');
           setTimeout(() => openBooking(rideId, r.from, r.to, r.date, r.time, r.price, r.driverPhone, r.driverName, r.vehicleType || 'commercial'), 500);
         }
       } catch(e) { console.error('Deep link ride error:', e); }
@@ -4864,6 +4865,7 @@ ${vtype} chahiye
         if(snap.exists()) {
           const r = snap.data();
           window.history.replaceState({}, document.title, window.location.pathname);
+          switchSection('rides');
           setTimeout(() => openHireInquiry(hireId, r.driverPhone, r.driverName, r.vehicleType, r.from, r.to || '', r.price || '', r.vehicleNumber || ''), 500);
         }
       } catch(e) { console.error('Deep link hire error:', e); }
@@ -4875,6 +4877,7 @@ ${vtype} chahiye
         if(snap.exists()) {
           const r = snap.data();
           window.history.replaceState({}, document.title, window.location.pathname);
+          switchSection('requests');
           setTimeout(() => handleContactPassenger(r.passengerPhone, r.passengerName, reqId), 500);
         }
       } catch(e) { console.error('Deep link request error:', e); }
@@ -4886,6 +4889,7 @@ ${vtype} chahiye
         if(snap.exists()) {
           const r = snap.data();
           window.history.replaceState({}, document.title, window.location.pathname);
+          switchSection('requests');
           setTimeout(() => openHireResponse(hirereqId, r.passengerPhone, r.passengerName, r.vehicleType, r.from || '', r.date || '', r.to || '', r.budgetMin || '', r.budgetMax || ''), 500);
         }
       } catch(e) { console.error('Deep link hirereq error:', e); }
